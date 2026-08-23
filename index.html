@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>French B2 Learning Hub</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>🇫🇷 French B2 Accelerator</h1>
+      <p>Target: Zero to B2 in 5 Months</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" onclick="switchTab('vocab')">🎴 Flashcards</button>
+      <button class="tab-btn" onclick="switchTab('tutor')">💬 AI Tutor</button>
+      <button class="tab-btn" onclick="switchTab('plan')">📅 5-Month Plan</button>
+    </nav>
+
+    <!-- FLASHCARDS TAB -->
+    <section id="vocab" class="tab-content active">
+      <div class="card" onclick="flipCard()">
+        <div id="card-front">Bonjour</div>
+        <div id="card-back" class="hidden">
+          <p class="translation">Hello / Good day</p>
+          <p class="phonetic">[bohn-zhoor]</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button onclick="prevCard()">Previous</button>
+        <span id="card-num">1 / 5</span>
+        <button onclick="nextCard()">Next</button>
+      </div>
+    </section>
+
+    <!-- TUTOR TAB -->
+    <section id="tutor" class="tab-content">
+      <div class="chat-box" id="chat-box">
+        <div class="bot-msg">
+          <strong>Tutor:</strong> Bonjour! Je suis votre professeur. Comment vous appelez-vous?<br>
+          <em>(Hello! I am your teacher. What is your name?)</em>
+        </div>
+      </div>
+      <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type in French or English..." onkeypress="handleKey(event)">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </section>
+
+    <!-- STUDY PLAN TAB -->
+    <section id="plan" class="tab-content">
+      <h3>5-Month B2 Roadmap</h3>
+      <ul>
+        <li><strong>Month 1 (A1):</strong> Basics, Present Tense, Essential 500 Words.</li>
+        <li><strong>Month 2 (A2):</strong> Passé Composé, Imparfait, Daily Routines.</li>
+        <li><strong>Month 3 (B1):</strong> Future Tense, Subjunctive Basics, Expressing Opinions.</li>
+        <li><strong>Month 4 (B1+):</strong> Complex Grammar, Watching French Media, Debate Topics.</li>
+        <li><strong>Month 5 (B2):</strong> Advanced Nuances, Speed Practice, B2 Mock Exams.</li>
+      </ul>
+    </section>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>

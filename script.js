@@ -1,25 +1,51 @@
-const flashcards = [
-  { front: "Bonjour", back: "Hello / Good day", phonetic: "[bohn-zhoor]" },
-  { front: "Merci beaucoup", back: "Thank you very much", phonetic: "[mair-see boh-koo]" },
-  { front: "S'il vous plaît", back: "Please", phonetic: "[seel voo pleh]" },
-  { front: "Comment allez-vous?", back: "How are you?", phonetic: "[koh-mahn tah-lay voo]" },
-  { front: "Au revoir", back: "Goodbye", phonetic: "[oh ruh-vwahr]" },
-  { front: "Où sont les toilettes?", back: "Where is the bathroom?", phonetic: "[oo soh leh twah-let]" },
-  { front: "Je ne comprends pas", back: "I don't understand", phonetic: "[zhuh nuh kohm-prahn pah]" },
-  { front: "Combien ça coûte?", back: "How much does it cost?", phonetic: "[kohm-byan sah koot]" },
-  { front: "Je voudrais un café", back: "I would like a coffee", phonetic: "[zhuh voo-dreh ahn kah-fay]" },
-  { front: "À bientôt", back: "See you soon", phonetic: "[ah byan-toh]" }
+// Master database of French vocabulary paired with articles & gender notes
+const vocabDatabase = [
+  // Feminine Nouns (une / la)
+  { front: "une voiture", back: "a car", gender: "Feminine (la)", phonetic: "[oon vwah-toor]" },
+  { front: "la maison", back: "the house", gender: "Feminine (la)", phonetic: "[lah meh-zohn]" },
+  { front: "une pomme", back: "an apple", gender: "Feminine (la)", phonetic: "[oon pohm]" },
+  { front: "la rue", back: "the street", gender: "Feminine (la)", phonetic: "[lah roo]" },
+  { front: "une eau", back: "a water", gender: "Feminine (l')", phonetic: "[oon oh]" },
+  { front: "la ville", back: "the city / town", gender: "Feminine (la)", phonetic: "[lah veel]" },
+  { front: "une boulangerie", back: "a bakery", gender: "Feminine (la)", phonetic: "[oon boo-lahn-zhree]" },
+  
+  // Masculine Nouns (un / le)
+  { front: "un café", back: "a coffee / cafe", gender: "Masculine (le)", phonetic: "[uhn kah-fay]" },
+  { front: "le pain", back: "the bread", gender: "Masculine (le)", phonetic: "[luh pan]" },
+  { front: "un livre", back: "a book", gender: "Masculine (le)", phonetic: "[uhn leev-ruh]" },
+  { front: "le travail", back: "the work / job", gender: "Masculine (le)", phonetic: "[luh trah-vy]" },
+  { front: "un chien", back: "a dog", gender: "Masculine (le)", phonetic: "[uhn shyan]" },
+  { front: "le restaurant", back: "the restaurant", gender: "Masculine (le)", phonetic: "[luh res-toh-rahn]" },
+  { front: "un train", back: "a train", gender: "Masculine (le)", phonetic: "[uhn tranh]" },
+
+  // Essential Phrases
+  { front: "S'il vous plaît", back: "Please", gender: "Phrase", phonetic: "[seel voo pleh]" },
+  { front: "Où sont les toilettes?", back: "Where is the bathroom?", gender: "Phrase", phonetic: "[oo soh leh twah-let]" },
+  { front: "Je ne comprends pas", back: "I don't understand", gender: "Phrase", phonetic: "[zhuh nuh kohm-prahn pah]" }
 ];
 
+// Deterministic shuffle based on the current date (Day of Year) to cycle cards daily
+function getDailyDeck() {
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+  
+  // Pseudo-random daily index shift
+  return [...vocabDatabase].sort((a, b) => {
+    const hashA = (a.front.length * dayOfYear) % 17;
+    const hashB = (b.front.length * dayOfYear) % 17;
+    return hashA - hashB;
+  });
+}
+
+const flashcards = getDailyDeck();
 let currentIndex = 0;
 
-// Text-to-Speech function for French audio
 function speakFrench(text) {
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel(); // Stop any previous audio
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'fr-FR';
-    utterance.rate = 0.9; // Slightly slower pace for clear learning
+    utterance.rate = 0.85; // Slightly slower pace for clear listening
     window.speechSynthesis.speak(utterance);
   } else {
     alert("Text-to-speech is not supported in your browser.");
@@ -28,7 +54,11 @@ function speakFrench(text) {
 
 function showCard() {
   const current = flashcards[currentIndex];
-  document.getElementById("card-front").innerText = current.front;
+  document.getElementById("card-front").innerHTML = `
+    <div>${current.front}</div>
+    <div style="font-size:0.8rem; color:#a0aec0; margin-top:8px;">${current.gender}</div>
+  `;
+  
   document.getElementById("card-back").innerHTML = `
     <p class="translation">${current.back}</p>
     <p class="phonetic">${current.phonetic}</p>
@@ -36,6 +66,7 @@ function showCard() {
       🔊 Listen
     </button>
   `;
+  
   document.getElementById("card-back").classList.add("hidden");
   document.getElementById("card-front").classList.remove("hidden");
   document.getElementById("card-num").innerText = `${currentIndex + 1} / ${flashcards.length}`;
@@ -85,5 +116,4 @@ function handleKey(e) {
   if (e.key === "Enter") sendMessage();
 }
 
-// Initialize on page load
 showCard();

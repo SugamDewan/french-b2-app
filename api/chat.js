@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-oss-20b",
+        model: "openai/gpt-oss-20b",
         messages: [
           {
             role: "system",
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ reply: `Groq Error: ${data.error?.message || 'Check API key or model availability'}` });
+      return res.status(500).json({ reply: `Groq Error: ${data.error?.message || 'Check API key or model string'}` });
     }
 
     const reply = data.choices[0].message.content;

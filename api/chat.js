@@ -5,6 +5,9 @@ export default async function handler(req, res) {
 
   const { message } = req.body;
 
+  // Try the most reliable active Groq model ID
+  const model = "llama3-8b-8192";
+
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -13,7 +16,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        model: model,
         messages: [
           {
             role: "system",
@@ -27,7 +30,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ reply: `Groq Error: ${data.error?.message || 'Check API key'}` });
+      return res.status(500).json({ reply: `Groq Error: ${data.error?.message || 'Check API key or model string'}` });
     }
 
     const reply = data.choices[0].message.content;

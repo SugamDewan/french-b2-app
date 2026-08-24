@@ -13,11 +13,11 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        model: "gpt-oss-20b",
         messages: [
           {
             role: "system",
-            content: "You are a French tutor. Reply in simple French, include English translations in parentheses, kindly point out grammar mistakes, and keep answers under 3 sentences."
+            content: "You are a French tutor helping a beginner reach B2 level. Reply in simple French, include English translations in parentheses, kindly correct any grammar errors, and keep answers under 3 sentences."
           },
           { role: "user", content: message }
         ]
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ reply: `Groq Error: ${data.error?.message || 'Check API key or model'}` });
+      return res.status(500).json({ reply: `Groq Error: ${data.error?.message || 'Check API key or model availability'}` });
     }
 
     const reply = data.choices[0].message.content;
